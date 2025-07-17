@@ -44,30 +44,35 @@ st.markdown("""
 
 def get_pubchem_data(chemical_name):
     """Fetch chemical data from PubChem API"""
-    base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{chemical_name}/JSON"
+    base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug"
     
     # First get CID (Compound ID)
     cid_url = f"{base_url}/compound/name/{chemical_name}/cids/JSON"
     try:
         response = requests.get(cid_url)
-        response.raise_for_status()  # Raise an error for bad responses
-        cid = response.json()['IdentifierList']['CID'][0]
-        
-        # Get compound information
-        compound_url = f"{base_url}/compound/cid/{cid}/JSON"
-        compound_response = requests.get(compound_url)
-        compound_response.raise_for_status()  # Raise an error for bad responses
-        
-        compound_data = compound_response.json()
-        return {
-            'success': True,
-            'data': compound_data
-        }
-    except requests.exceptions.HTTPError as http_err:
-        return {
-            'success': False,
-            'error': f"HTTP error occurred: {http_err}"
-        }
+        if response.status_code == 200:
+            cid = response.json()['IdentifierList']['CID'][0]
+            
+            # Get compound information
+            compound_url = f"{base_url}/compound/cid/{cid}/JSON"
+            compound_response = requests.get(compound_url)
+            
+            if compound_response.status_code == 200:
+                compound_data = compound_response.json()
+                return {
+                    'success': True,
+                    'data': compound_data
+                }
+            else:
+                return {
+                    'success': False,
+                    'error': "Failed to fetch compound details"
+                }
+        else:
+            return {
+                'success': False,
+                'error': "Chemical not found or error in PubChem API"
+            }
     except Exception as e:
         return {
             'success': False,
