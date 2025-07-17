@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import pubchempy as pcp
 from PIL import Image
 from io import BytesIO
 
