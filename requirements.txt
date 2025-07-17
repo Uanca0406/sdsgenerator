@@ -2,4 +2,4 @@ streamlit
 requests
 pillow
 pandas
-from io import BytesIO
+BytesIO
