@@ -42,7 +42,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def get_pubchem_data(chemical_name):
+def get_pubchem_data(compound_name):
     """Fetch chemical data from PubChem API"""
     base_url = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{compound_name}/JSON"
     
